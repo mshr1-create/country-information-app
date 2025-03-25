@@ -1,28 +1,45 @@
 import React from 'react';
+import './CountryInfo.css';
 
 function CountryInfo({ country }) {
-  if (!country) {
-    return <div>国情報がありません。</div>;
-  }
+  if (!country) return null;
 
-  // 仮に API のデータ構造が以下のようになっていると仮定
-  // country = {
-  //   name: "Japan",
-  //   capital: "Tokyo",
-  //   population: 126300000,
-  //   languages: ["日本語"],
-  //   flag: "https://restcountries.com/data/jpn.svg",
-  //   currency: "円"
-  // }
+  // REST Countries API (v2) のレスポンス例を想定
+  // https://restcountries.com/v2/name/Japan?fullText=true などで取得できる
+  const {
+    name,
+    capital,
+    population,
+    languages,
+    currencies,
+    flag
+  } = country;
 
   return (
-    <div className="country-card" style={{ border: '1px solid #ccc', padding: '20px', margin: '10px' }}>
-      <img src={country.flag} alt={`Flag of ${country.name}`} style={{ width: '100px', height: 'auto' }} />
-      <h3>{country.name}</h3>
-      <p>首都: {country.capital}</p>
-      <p>人口: {country.population.toLocaleString()}</p>
-      <p>言語: {Array.isArray(country.languages) ? country.languages.join(', ') : country.languages}</p>
-      <p>通貨: {country.currency}</p>
+    <div className="country-card">
+      <img src={flag} alt={name} className="country-flag" />
+      <h3 className="country-name">{name}</h3>
+
+      {capital && (
+        <p className="country-detail">
+          <strong>首都:</strong> {capital}
+        </p>
+      )}
+      {population && (
+        <p className="country-detail">
+          <strong>人口:</strong> {population.toLocaleString()}
+        </p>
+      )}
+      {languages && languages.length > 0 && (
+        <p className="country-detail">
+          <strong>言語:</strong> {languages.map(lang => lang.name).join(', ')}
+        </p>
+      )}
+      {currencies && currencies.length > 0 && (
+        <p className="country-detail">
+          <strong>通貨:</strong> {currencies.map(cur => cur.name).join(', ')}
+        </p>
+      )}
     </div>
   );
 }
